@@ -1,0 +1,16 @@
+// less混入就是指：一段less函数代码  其他选择器使用的使用   可以直接复用的
+
+.box {
+    width: 200px;
+    height: 200px;
+}
+.box1 {
+    .box()
+}
+.hoverShadow (){
+    transition: all .3s;
+    &:hover {
+        transform: translate3d(0, -3px, 0);
+        box-shadow:  0 3px 8px rgba(0,0,0,0.2);
+    }
+}
