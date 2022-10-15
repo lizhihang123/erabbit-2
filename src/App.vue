@@ -1,22 +1,11 @@
 <template>
-  <!-- <nav>
-    <button @click="$store.commit('cart/changeName', 123)">点击改变值</button>
-    {{$store.state.cart.name}}
-  </nav> -->
-  <router-view/>
+  <router-view />
 </template>
 
 <script>
-import { useStore } from 'vuex'
 export default {
   setup () {
-    const store = useStore()
-    const changename = () => {
-      console.log(store.state.cart.name)
-      store.commit('changeName2', 123)
-    }
     return {
-      changename
     }
   }
 }
@@ -29,17 +18,16 @@ export default {
   text-align: center;
   color: #2c3e50;
 }
+// nav {
+//   padding: 30px;
 
-nav {
-  padding: 30px;
+//   a {
+//     font-weight: bold;
+//     color: #2c3e50;
 
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-
-    &.router-link-exact-active {
-      color: #42b983;
-    }
-  }
-}
+//     &.router-link-exact-active {
+//       color: #42b983;
+//     }
+//   }
+// }
 </style>

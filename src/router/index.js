@@ -1,6 +1,9 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import Home from '@/views/home/index.vue'
 import Layout from '@/views/Layout.vue'
+// 一级分类和二级分类的页面
+import TopCategory from '@/views/category/index.vue'
+import SubCategory from '@/views/category/sub.vue'
 
 const routes = [
   {
@@ -12,6 +15,14 @@ const routes = [
         path: '/',
         name: 'Home',
         component: Home
+      },
+      {
+        path: '/category/:id',
+        component: TopCategory
+      },
+      {
+        path: '/category/sub/:id',
+        component: SubCategory
       }
     ]
   }

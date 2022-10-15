@@ -1,7 +1,14 @@
 export default {
   namespaced: true,
   state: {
-    name: '123'
+    profile: {
+      id: '',
+      avator: '',
+      nickname: '',
+      account: '',
+      mobile: '',
+      token: ''
+    }
   },
   getters: {
 

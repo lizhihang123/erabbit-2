@@ -3,7 +3,7 @@ import store from '@/store'
 import router from '@/router'
 
 // 导出基地址
-export const baseURL = 'http://apipc-xiaotuxian-front-devtest.itheima.net/'
+export const baseURL = 'http://apipc-xiaotuxian-front.itheima.net/'
 
 // axios的基本配置
 const instance = axios.create({
@@ -25,7 +25,8 @@ instance.interceptors.request.use(config => {
 
 // 拦截响应的业务逻辑
 instance.interceptors.response.use(res => res.data, err => {
-  if (err.response && err.response.status === 401) {
+  debugger
+  if (err.response && err.response.status === 404) {
     // 清空无效的用户数据
     store.commit('user/setUser', {})
     // 获取当前页面的完整路径
