@@ -46,10 +46,8 @@ export default {
     display: flex;
     align-items: center;
   }
-
   .logo {
     width: 200px;
-
     a {
       display: block;
       height: 132px;
@@ -92,12 +90,10 @@ export default {
     position: relative;
     border-bottom: 1px solid #e7e7e7;
     line-height: 32px;
-
     .icon-search {
       font-size: 18px;
-      margin-left: 5px;
+      margin-left: -1px;
     }
-
     input {
       width: 140px;
       padding-left: 5px;
