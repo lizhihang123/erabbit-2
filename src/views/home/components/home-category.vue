@@ -17,18 +17,18 @@
     1.鼠标经过 记得id
     2.通过id 得到分类商品数据
     3.根据这个商品数据 来进行渲染
-
-    问题：
-    1.鼠标离开时，还是显示右侧的商品
  -->
-  <div class='home-category'>
+  <div
+    class='home-category'
+    @mouseleave="categoryId = null"
+  >
     <!-- 左侧menu -->
     <ul class="menu">
       <li
         v-for="lis in menuList"
         :key="lis.id"
         @mouseenter="categoryId = lis.id"
-        @mouseleave="curCategory = null"
+        :class="{active: lis.id === categoryId}"
       >
         <RouterLink :to="`/category/${lis.id}`">{{lis.name}}</RouterLink>
         <template v-if="lis.children">
@@ -40,12 +40,34 @@
             {{sub.name}}
           </RouterLink>
         </template>
+        <!-- 骨架屏组件 -->
+        <template v-else>
+          <xtx-skeleton
+            :animated="true"
+            width="54px"
+            height="18px"
+            style="margin-right: 5px;"
+            bg="rgba(255,255,255, 0.2)"
+          />
+          <xtx-skeleton
+            :animated="true"
+            width="54px"
+            height="18px"
+            bg="rgba(255,255,255, 0.2)"
+          />
+        </template>
       </li>
     </ul>
     <!-- 弹层 -->
-    <div class="layer">
-      <h4>分类推荐 <small>根据您的购买或浏览记录推荐</small></h4>
-      <ul v-if="curCategory && curCategory.goods">
+    <div
+      class="layer"
+      v-if="(curCategory && curCategory.goods ) ||
+      (curCategory && curCategory.brandResult)"
+    >
+      <h4>{{ curCategory && curCategory.brandResult ? "品牌推荐" : "分类推荐"}}
+        <small>根据您的购买或浏览记录推荐</small>
+      </h4>
+      <ul>
         <li
           v-for="good in curCategory.goods"
           :key="good.id"
@@ -63,6 +85,28 @@
           </RouterLink>
         </li>
       </ul>
+
+      <!-- 品牌专用的结构 -->
+      <!-- 注意 curCategory里面存放的是brands而不是brand -->
+      <ul v-if="curCategory && curCategory.brandResult && curCategory.brandResult.length">
+        <li
+          class="brand"
+          v-for="item in curCategory.brandResult"
+          :key="item.id"
+        >
+          <RouterLink to="/">
+            <img
+              :src="item.picture"
+              alt=""
+            >
+            <div class="info">
+              <p class="place"><i class="iconfont icon-dingwei"></i>{{item.place}}</p>
+              <p class="name ellipsis">{{item.name}}</p>
+              <p class="desc ellipsis-2">{{item.desc}}</p>
+            </div>
+          </RouterLink>
+        </li>
+      </ul>
     </div>
   </div>
 </template>
@@ -70,6 +114,7 @@
 <script>
 import { computed, reactive, ref } from 'vue'
 import { useStore } from 'vuex'
+import { findBrand } from '@/api/home'
 export default {
   name: 'HomeCategory',
   setup () {
@@ -81,7 +126,9 @@ export default {
       children: [{
         id: 'brand-children',
         name: '品牌推荐'
-      }]
+      }],
+      // 左侧弹层 layer使用
+      brandResult: []
     })
     const menuList = computed(() => {
       const list = store.state.category.list.map((item, index) => {
@@ -103,10 +150,17 @@ export default {
       return menuList.value.find(item => item.id === categoryId.value
       )
     })
+    // 3.获取品牌数据
+    findBrand().then(data => {
+      console.log(data)
+      brand.brandResult = data.result.slice(0, 6)
+      // console.log(brand.brands)
+    })
     return {
       menuList,
       categoryId,
-      curCategory
+      curCategory,
+      brand
     }
   }
 }
@@ -125,7 +179,8 @@ export default {
       padding-left: 40px;
       height: 50px;
       line-height: 50px;
-      &:hover {
+      &:hover,
+      &.active {
         background: @xtxColor;
       }
       a {
@@ -140,7 +195,7 @@ export default {
 }
 .layer {
   width: 990px;
-  height: 500px;
+  height: 450px;
   background: rgba(255, 255, 255, 0.8);
   position: absolute;
   left: 250px;
@@ -151,6 +206,7 @@ export default {
     font-size: 20px;
     font-weight: normal;
     line-height: 80px;
+    text-align: left;
     small {
       font-size: 16px;
       color: #666;
@@ -167,6 +223,7 @@ export default {
       border: 1px solid #eee;
       border-radius: 4px;
       background: #fff;
+
       &:nth-child(3n) {
         margin-right: 0;
       }
@@ -200,6 +257,24 @@ export default {
             i {
               font-size: 16px;
             }
+          }
+        }
+      }
+    }
+    li.brand {
+      height: 180px;
+      a {
+        align-items: flex-start;
+        img {
+          width: 120px;
+          height: 160px;
+        }
+        .info {
+          p {
+            margin-top: 8px;
+          }
+          .place {
+            color: #999;
           }
         }
       }
