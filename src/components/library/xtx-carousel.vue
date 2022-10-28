@@ -1,8 +1,9 @@
 <template>
   <div
     class='xtx-carousel'
-    @mouseleave="start()"
+    ref="Carousel"
     @mouseenter="stop()"
+    @mouseleave="start()"
   >
     <ul class="carousel-body">
       <li
@@ -22,16 +23,21 @@
     <a
       href="javascript:;"
       class="carousel-btn prev"
-    ><i class="iconfont icon-angle-left"></i></a>
+      @click="throttle(toggle, 1000, -1)"
+    >
+      <i class="iconfont icon-angle-left"></i>
+    </a>
     <a
       href="javascript:;"
       class="carousel-btn next"
+      @click="throttle(toggle, 1000, 1)"
     ><i class="iconfont icon-angle-right"></i></a>
     <div class="carousel-indicator">
       <span
         v-for="(item, i) in sliders"
         :key="item.id"
         :class="{active: index === i }"
+        @click="index = i"
       ></span>
     </div>
   </div>
@@ -57,12 +63,31 @@ export default {
     }
   },
   setup (props) {
+    const Carousel = ref(null)
+    // 获取到dom元素的左右距离和上下距离
+    // onMounted(() => {
+    //   Carousel.value.addEventListener('mouseenter', function (e) {
+    //     if (Carousel.value.contains(e.target)) {
+    //       stop()
+    //     } else {
+    //       start()
+    //     }
+    //   })
+    //   Carousel.value.addEventListener('mouseleave', function (e) {
+    //     if (Carousel.value.contains(e.target)) {
+    //       stop()
+    //     } else {
+    //       start()
+    //     }
+    //   })
+    // })
     // 渲染结构
     // 1. 默认显示哪张图片呢？
     const index = ref(0)
     // 2. 自动播放
     let timer = null
     const autoPlayFn = () => {
+      // 事先判断鼠标是否在可视区域里面
       clearInterval(timer)
       timer = setInterval(() => {
         index.value++
@@ -92,10 +117,49 @@ export default {
         autoPlayFn()
       }
     }
+    // toggle切换轮播图
+    const toggle = (step) => {
+      if (step >= 0 && index.value >= props.sliders.length - 1) {
+        index.value = 0
+        return
+      }
+      if (step < 0 && index.value <= 0) {
+        // 必须是等于props.sliders.length - 1而不是length
+        index.value = props.sliders.length - 1
+        return
+      }
+      index.value += step
+    }
+
+    // 节流的函数
+    // 尝试把throttle里面返回的函数抽离成单独的函数，-> 有朋友建议这么做，这样每次返回的都是同一个函数，但是俺不理解，为啥要这样去做
+    const throttleSon = function (func, delay, timer, step) {
+      debugger
+      const context = this
+      // 节流的关键 如果timer变量还有值 说明时间还没有到
+      if (timer) {
+        return
+      }
+      timer = setTimeout(function () {
+        // debugger
+        func.call(context, step)
+        timer = null
+      }, delay)
+    }
+    function throttle (func, delay, step) {
+      // step是点击按钮 切换一张轮播图 取值 1/-1
+      debugger
+      // timer变量在外面声明
+      let timer
+      return throttleSon.bind(null, func, delay, timer, step)
+    }
     return {
       index,
       start,
-      stop
+      stop,
+      toggle,
+      throttle,
+      Carousel
     }
   }
 }
