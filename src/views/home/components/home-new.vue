@@ -27,7 +27,7 @@
               <RouterLink :to="`/product/${good.id}`">
                 <img
                   alt=""
-                  :src="good.picture"
+                  v-lazyload="good.picture"
                 >
                 <p class="name ellipsis">{{good.name}}</p>
                 <p class="price">&yen;{{good.price}}</p>

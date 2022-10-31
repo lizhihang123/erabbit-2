@@ -14,9 +14,16 @@
         <!-- 品牌推荐 -->
         <HomeBrand />
         <!-- 产品区块 -->
-        <HomeProduct />
+        <!-- <HomeProduct /> -->
         <!-- 最新模块 -->
-        <!-- <HomeSpecial /> -->
+        <HomeSpecial />
+        <!-- 面包屑 -->
+        <XtxBread
+          parentPath="www.baidu.com"
+          parentName="百度"
+        >
+          我是谁？
+        </XtxBread>
       </div>
     </div>
   </div>
@@ -27,8 +34,8 @@ import HomeBanner from './components/home-banner'
 import HomeNew from './components/home-new'
 import HomeHot from './components/home-hot'
 import HomeBrand from './components/home-brand'
-import HomeProduct from './components/home-product'
-// import HomeSpecial from './components/home-special'
+// import HomeProduct from './components/home-product'
+import HomeSpecial from './components/home-special'
 import { ref } from 'vue'
 export default {
   name: 'PageHome',
@@ -38,8 +45,8 @@ export default {
     HomeNew,
     HomeHot,
     HomeBrand,
-    // HomeSpecial
-    HomeProduct
+    HomeSpecial
+    // HomeProduct
   },
   setup () {
     const show = ref(true)

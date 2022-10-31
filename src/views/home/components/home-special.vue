@@ -3,55 +3,40 @@
     <template v-slot:right>
       <XtxMore />
     </template>
-    <Transition name="fade">
-      <div
-        class="special-list"
-        ref="homeSpecial"
-        v-if="goods && good.length"
-      >
+    <div ref="homeSpecial">
+      <Transition name="fade">
         <div
-          class="special-item"
-          v-for="good in goods"
-          :key="good.id"
+          class="special-list"
+          v-if="goods && goods.length"
         >
-          <RouterLink to="/">
-            <img
-              :src="good.cover"
-              alt
-            />
-            <div class="meta">
-              <p class="title">
-                <span class="top ellipsis">{{good.title}}</span>
-                <span class="sub ellipsis">{{good.summary}}</span>
-              </p>
-              <span class="price">&yen;{{good.lowestPrice}}起</span>
+          <div
+            class="special-item"
+            v-for="good in goods"
+            :key="good.id"
+          >
+            <RouterLink to="/">
+              <img
+                v-lazyload="good.cover"
+                alt
+              />
+              <div class="meta">
+                <p class="title">
+                  <span class="top ellipsis">{{good.title}}</span>
+                  <span class="sub ellipsis">{{good.summary}}</span>
+                </p>
+                <span class="price">&yen;{{good.lowestPrice}}起</span>
+              </div>
+            </RouterLink>
+            <div class="foot">
+              <span class="like"><i class="iconfont icon-hart1"></i>{{good.collectNum}}</span>
+              <span class="view"><i class="iconfont icon-see"></i>{{good.viewNum}}</span>
+              <span class="reply"><i class="iconfont icon-message"></i>{{good.replyNum}}</span>
             </div>
-          </RouterLink>
-          <div class="foot">
-            <span class="like"><i class="iconfont icon-hart1"></i>{{good.collectNum}}</span>
-            <span class="view"><i class="iconfont icon-see"></i>{{good.viewNum}}</span>
-            <span class="reply"><i class="iconfont icon-message"></i>{{good.replyNum}}</span>
           </div>
         </div>
-      </div>
-      <div
-        v-else
-        class="specialElse"
-      >
-        <XtxSkeleton
-          width="400px"
-          height="360px"
-        />
-        <XtxSkeleton
-          width="400px"
-          height="360px"
-        />
-        <XtxSkeleton
-          width="400px"
-          height="360px"
-        />
-      </div>
-    </Transition>
+        <HomeSpecialSkeleton v-else />
+      </Transition>
+    </div>
 
   </HomePanel>
 </template>
@@ -61,9 +46,10 @@ import HomePanel from './home-panel'
 import { findSpecial } from '@/api/home'
 // import { ref } from 'vue'
 import { useLazyData } from '@/hooks'
+import HomeSpecialSkeleton from './home-special-skeleton.vue'
 export default {
   name: 'HomeSpecial',
-  components: { HomePanel },
+  components: { HomePanel, HomeSpecialSkeleton },
   setup () {
     // const goods = ref([])
     // findSpecial().then(data => {
@@ -71,6 +57,7 @@ export default {
     //   console.log(goods)
     // })
     const { result: goods, target: homeSpecial } = useLazyData(findSpecial)
+    console.log(goods)
     return {
       goods,
       homeSpecial
@@ -167,11 +154,6 @@ export default {
         vertical-align: middle;
       }
     }
-  }
-}
-.specialElse {
-  .xtx-skeleton ~ .xtx-skeleton {
-    margin: 16px auto 0;
   }
 }
 </style>

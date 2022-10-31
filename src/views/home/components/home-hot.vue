@@ -19,7 +19,7 @@
           >
             <RouterLink to="/">
               <img
-                :src="item.picture"
+                v-lazyload="item.picture"
                 alt=""
               >
               <p class="name">{{item.title}}</p>

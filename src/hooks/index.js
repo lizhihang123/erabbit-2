@@ -12,9 +12,13 @@ export const useLazyData = (apiFn) => {
         // 停止监听
         stop()
         // 调用接口 拿数据
-        apiFn().then(data => {
-          result.value = data.result
-        })
+        try {
+          apiFn().then((data) => {
+            result.value = data.result
+          })
+        } catch (error) {
+          console.log(error)
+        }
       }
     }
   )
