@@ -1,54 +1,76 @@
 <template>
   <div class="home-product">
     <HomePanel
-      title="生鲜"
-      v-for="i in 1"
-      :key="i"
+      :title="item.name"
+      v-for="item in goods"
+      :key="item.id"
     >
       <template v-slot:right>
         <div class="sub">
-          <RouterLink to="/">海鲜</RouterLink>
-          <RouterLink to="/">水果</RouterLink>
-          <RouterLink to="/">蔬菜</RouterLink>
-          <RouterLink to="/">水产</RouterLink>
-          <RouterLink to="/">禽肉</RouterLink>
+          <RouterLink
+            to="/"
+            v-for="sub in item.children"
+            :key="sub.id"
+          >{{sub.name}}</RouterLink>
         </div>
         <XtxMore />
       </template>
       <div class="box">
-        <div>
-          <RouterLink
-            class="cover"
-            to="/"
+        <RouterLink
+          class="cover"
+          to="/"
+        >
+          <img
+            v-lazyload="item.picture"
+            alt=""
+            class="product_img"
           >
-            <img
-              src="http://zhoushugang.gitee.io/erabbit-client-pc-static/uploads/fresh_goods_cover.jpg"
-              alt=""
-            >
-            <strong class="label">
-              <span>生鲜馆</span>
-              <span>全场3件7折</span>
-            </strong>
-          </RouterLink>
-        </div>
-        <!-- <ul class="goods-list">
+          <strong class="label">
+            <span>{{item.name}}馆</span>
+            <span>{{item.safeInfo}}</span>
+          </strong>
+        </RouterLink>
+        <ul class="goods-list">
           <li
-            v-for="i in 8"
-            :key="i"
+            v-for="good in item.goods"
+            :key="good.id"
           >
-            <HomeGoods />
+            <HomeGoods :good="good" />
           </li>
-        </ul> -->
+        </ul>
       </div>
     </HomePanel>
   </div>
 </template>
 
 <script>
+// 找到布局的问题在哪里？
+// 1. 关键点，为何 商品区块的a标签的长度和宽度都是0 为什么.box设置了200px 200px
+//    找到错误 通过对当前元素的宽高的检查，然后去检查父级的宽高，一层一层找到问题 就是在less混入里面写了一段.box的200px的代码，导致所有的.box里面都有.box宽度和高度的混入
+//    事实上.box本身并没有设置高度 应该由a标签撑开，而里面的图片继承的也是a标签的宽度
+
+// 2. 搞清楚数据结构非常重要，先知道这个地方需要什么数据，然后去返回的数据里面找
+//    -> 说明对于 v-for里面再次嵌套一个v-for不是特别的熟悉
+
+// 3. 下面出现绿色边框
+//    找到是哪一条样式出现了问题 -> 怎么找到呢？通过注释
+//    发现是下面的extra的bg影响到了上面的，修改就好了
 import HomePanel from './home-panel'
+import HomeGoods from './home-goods'
+import { findGoods } from '@/api/home'
+import { ref } from 'vue'
 export default {
   name: 'HomeProduct',
-  components: { HomePanel }
+  components: { HomePanel, HomeGoods },
+  setup () {
+    const goods = ref([])
+    findGoods().then(data => {
+      goods.value = data.result
+    })
+    return {
+      goods
+    }
+  }
 }
 </script>
 
@@ -81,6 +103,9 @@ export default {
       img {
         width: 100%;
         height: 100%;
+      }
+      .product_img {
+        object-fit: cover;
       }
       .label {
         width: 188px;

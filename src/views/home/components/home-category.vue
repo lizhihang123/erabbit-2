@@ -192,6 +192,11 @@ export default {
       }
     }
   }
+  &:hover {
+    .layer {
+      display: block;
+    }
+  }
 }
 .layer {
   width: 990px;
@@ -200,7 +205,7 @@ export default {
   position: absolute;
   left: 250px;
   top: 0;
-  display: none;
+  // opacity: 0;
   padding: 0 15px;
   h4 {
     font-size: 20px;
@@ -280,10 +285,8 @@ export default {
       }
     }
   }
-}
-&:hover {
-  .layer {
-    display: block;
-  }
+  // &:hover {
+  //   opacity: 1;
+  // }
 }
 </style>

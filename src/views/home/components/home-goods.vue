@@ -5,13 +5,13 @@
       class="image"
     >
       <img
-        src="http://zhoushugang.gitee.io/erabbit-client-pc-static/uploads/fresh_goods_1.jpg"
+        v-lazyload="good.picture"
         alt=""
       />
     </RouterLink>
-    <p class="name ellipsis-2">美威 智利原味三文鱼排 240g/袋 4片装</p>
-    <p class="desc">海鲜年货</p>
-    <p class="price">&yen;108.00</p>
+    <p class="name ellipsis-2">{{good.name}}</p>
+    <p class="desc ellipsis-2">{{good.desc}}</p>
+    <p class="price">&yen;{{good.price}}</p>
     <div class="extra">
       <RouterLink to="/">
         <span>找相似</span>
@@ -23,7 +23,13 @@
 
 <script>
 export default {
-  name: 'HomeGoods'
+  name: 'HomeGoods',
+  props: {
+    good: {
+      type: Object,
+      default: () => {}
+    }
+  }
 }
 </script>
 
@@ -65,8 +71,8 @@ export default {
   .extra {
     position: absolute;
     left: 0;
-    bottom: 0;
-    height: 86px;
+    bottom: -1px;
+    height: 87px;
     width: 100%;
     background: @xtxColor;
     text-align: center;

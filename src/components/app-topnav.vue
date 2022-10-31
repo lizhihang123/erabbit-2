@@ -38,9 +38,6 @@ export default {
 }
 </script>
 <style scoped lang="less">
-nav {
-  padding: 0;
-}
 .app-topnav {
   background: #333;
   ul {
