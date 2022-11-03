@@ -2,8 +2,8 @@
   <div
     class='xtx-carousel'
     ref="Carousel"
-    @mouseenter="stop()"
-    @mouseleave="start()"
+    @mouseenter="stop"
+    @mouseleave="start"
   >
     <ul class="carousel-body">
       <li
@@ -23,14 +23,14 @@
     <a
       href="javascript:;"
       class="carousel-btn prev"
-      @click="throttle(toggle(-1), 1000)"
+      @click="toggle(-1)"
     >
       <i class="iconfont icon-angle-left"></i>
     </a>
     <a
       href="javascript:;"
       class="carousel-btn next"
-      @click="throttle(toggle(1), 1000)"
+      @click="toggle(1)"
     ><i class="iconfont icon-angle-right"></i></a>
     <div class="carousel-indicator">
       <span
@@ -89,7 +89,8 @@ export default {
       immediate: true
     })
     // 鼠标经过 轮播图停止自动播放
-    const stop = () => {
+    const stop = (a, e) => {
+      console.log(a, e)
       if (timer) {
         clearInterval(timer)
       }
@@ -116,29 +117,28 @@ export default {
 
     // 节流的函数
     // 尝试把throttle里面返回的函数抽离成单独的函数，-> 有朋友建议这么做，这样每次返回的都是同一个函数，但是俺不理解，为啥要这样去做
-    function throttle (func, delay, step) {
-      // step是点击按钮 切换一张轮播图 取值 1/-1
-      // timer变量在外面声明
-      let timer
-      return function () {
-        const context = this
-        // 节流的关键 如果timer变量还有值 说明时间还没有到
-        if (timer) {
-          return
-        }
-        timer = setTimeout(function () {
-        // debugger
-          func.call(context, step)
-          timer = null
-        }, delay)
-      }
-    }
+    // function throttle (func, delay, step) {
+    //   // step是点击按钮 切换一张轮播图 取值 1/-1
+    //   // timer变量在外面声明
+    //   let timer
+    //   return function () {
+    //     const context = this
+    //     // 节流的关键 如果timer变量还有值 说明时间还没有到
+    //     if (timer) {
+    //       return
+    //     }
+    //     timer = setTimeout(function () {
+    //     // debugger
+    //       func.call(context, step)
+    //       timer = null
+    //     }, delay)
+    //   }
+    // }
     return {
       index,
       start,
       stop,
       toggle,
-      throttle,
       Carousel
     }
   }
