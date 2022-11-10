@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <!-- 面包屑 -->
-    <SubBread :sub-category="SubCategory"></SubBread>
+    <SubBread :SubCategory="SubCategory"></SubBread>
     <!-- 筛选区 -->
     <SubFilter></SubFilter>
   </div>

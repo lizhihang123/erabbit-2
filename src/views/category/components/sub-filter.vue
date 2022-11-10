@@ -1,12 +1,15 @@
 <template>
   <!-- 筛选区 -->
-  <div class="sub-filter">
+  <div
+    class="sub-filter"
+    v-if="filterData"
+  >
     <div
       class="item"
-      v-for="i in 4"
-      :key="i"
+      v-for="filter in filterData"
+      :key="filter.id"
     >
-      <div class="head">品牌：</div>
+      <div class="head"></div>
       <div class="body">
         <a href="javascript:;">全部</a>
         <a
@@ -19,8 +22,30 @@
   </div>
 </template>
 <script>
+import { watch, ref } from 'vue'
+import { useRoute } from 'vue-router'
+import { findSubCategoryFilter } from '@/api/category'
 export default {
-  name: 'SubFilter'
+  name: 'SubFilter',
+  setup () {
+    // 1.拿数据
+    // 2.
+    const filterData = ref([])
+    const route = useRoute()
+    watch(() => route.params.id, (newVal, oldVal) => {
+      if (newVal && route.path === `/category/sub/${newVal}`) {
+        findSubCategoryFilter(route.params.id).then(data => {
+          filterData.value = data.result
+          console.log(filterData.value)
+        })
+      }
+    }, {
+      immediate: true
+    })
+    return {
+      filterData
+    }
+  }
 }
 </script>
 <style scoped lang='less'>
