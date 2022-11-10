@@ -89,8 +89,7 @@ export default {
       immediate: true
     })
     // 鼠标经过 轮播图停止自动播放
-    const stop = (a, e) => {
-      console.log(a, e)
+    const stop = () => {
       if (timer) {
         clearInterval(timer)
       }

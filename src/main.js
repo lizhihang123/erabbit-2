@@ -8,5 +8,4 @@ import 'normalize.css'
 import './assets/styles/common.less'
 // 使用插件
 import ui from '@/components/library/index'
-
 createApp(App).use(store).use(router).use(ui).mount('#app')

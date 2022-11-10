@@ -116,3 +116,20 @@ ul {
     }
   }
 }
+
+.fade-right-enter-to,
+.fade-right-leave-from {
+  opacity: 0;
+  transform: none;
+}
+
+.fade-right-enter-active,
+.fade-right-leave-active {
+  transition: all 0.3s;
+}
+
+.fade-right-enter-from,
+.fade-right-leave-to {
+  opacity: 1;
+  transform: translate3d(20px, 0, 0);
+}

@@ -7,7 +7,6 @@
     <i class="iconfont icon-angle-right"></i>
   </RouterLink>
 </template>
-
 <script>
 export default {
   name: 'XtxMore',

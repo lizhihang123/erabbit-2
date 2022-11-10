@@ -17,13 +17,6 @@
         <HomeProduct />
         <!-- 最新模块 -->
         <HomeSpecial />
-        <!-- 面包屑 -->
-        <XtxBread
-          parentPath="www.baidu.com"
-          parentName="百度"
-        >
-          我是谁？
-        </XtxBread>
       </div>
     </div>
   </div>

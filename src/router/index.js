@@ -37,7 +37,11 @@ const routes = [
 const router = createRouter({
   // 使用hash方式创建路由
   history: createWebHashHistory(),
-  routes
+  routes,
+  scrollBehavior (to, from, savedPosition) {
+    // return { x: 0, y: 0 } vue2的写法
+    return { top: 0, left: 0 }
+  }
 })
 
 export default router
