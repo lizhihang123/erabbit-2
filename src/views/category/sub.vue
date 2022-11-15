@@ -4,19 +4,45 @@
     <SubBread :SubCategory="SubCategory"></SubBread>
     <!-- 筛选区 -->
     <SubFilter></SubFilter>
+    <!-- 结果区域 -->
+    <div class="goods-list">
+      <!-- 排序 -->
+      <SubSort></SubSort>
+      <!-- 列表 -->
+      <ul>
+        <li
+          v-for="good in goodList"
+          :key="good.id"
+        >
+          <GoodsItem :good="good" />
+        </li>
+      </ul>
+
+      <!-- 加载 -->
+      <XtxInfiniteLoading
+        :loading="loading"
+        :finished="finished"
+        @infinite="getData"
+      ></XtxInfiniteLoading>
+    </div>
   </div>
 </template>
 <script>
 import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
-import { computed } from 'vue'
+import { computed, ref, watch } from 'vue'
 import SubBread from './components/sub-bread.vue'
 import SubFilter from './components/sub-filter.vue'
+import SubSort from './components/sub-sort.vue'
+import GoodsItem from './components/goods-item.vue'
+import { findSubCategoryGoods } from '@/api/category'
 export default {
   name: 'SubCategory',
   components: {
     SubBread,
-    SubFilter
+    SubFilter,
+    SubSort,
+    GoodsItem
   },
   setup () {
     const store = useStore()
@@ -36,12 +62,71 @@ export default {
       })
       return obj
     })
-    // console.log(SubCategory)
+    // filter加载数据
+    const goodList = ref([])
+    const loading = ref(false)
+    const finished = ref(false)
+    // 查询的参数
+    let reqParams = {
+      page: 1,
+      pageSize: 10
+    }
+    // 获取数据函数
+    // 1. loading值改为false
+    // 2. 修改reqParams.categoryId
+    // 3. 发请求 分为有数据和没有数据两种情况 根据result.items.length来判断
+    const getData = () => {
+      // 开始加载
+      loading.value = true
+      // 分类ID 接口需要
+      reqParams.categoryId = route.params.id
+      findSubCategoryGoods(reqParams).then(({ result }) => {
+        // 有数据时
+        if (result.items.length) {
+          goodList.value.push(...result.items)
+          // 页码加+1
+          reqParams.page++
+        } else {
+          // 数据全部加载完毕了
+          finished.value = true
+        }
+        // 加载结束
+        loading.value = false
+      })
+    }
+
+    // 切换二级分类时 重新加载数据
+    watch(() => route.params.id, (newVal) => {
+      if (newVal && route.path === `/category/sub/${newVal}`) {
+        // 清空这个数组
+        goodList.value = []
+        // 请求参数变化
+        reqParams = {
+          page: 1,
+          pageSize: 20
+        }
+        // 重新加载数据
+        finished.value = false
+      }
+    })
     return {
-      SubCategory
+      SubCategory,
+      getData,
+      goodList,
+      loading,
+      finished
     }
   }
 }
 </script>
 <style scoped lang="less">
+.goods-list {
+  background: #fff;
+  padding: 0 25px;
+  margin-top: 25px;
+  ul {
+    display: flex;
+    flex-wrap: wrap;
+  }
+}
 </style>

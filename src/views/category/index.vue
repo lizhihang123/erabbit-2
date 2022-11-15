@@ -1,7 +1,7 @@
 <template>
   <div class="top-category">
     <div class="container">
-      <!-- 面包屑 -->
+      <!-- 1. 面包屑 -->
       <XtxBread>
         <XtxBreadItem to="/">首页</XtxBreadItem>
         <Transition
@@ -34,7 +34,7 @@
           </xtx-skeleton>
         </Transition>
       </XtxBread>
-      <!-- 轮播图 -->
+      <!-- 2. 轮播图 -->
       <XtxCarousel
         :sliders="sliders"
         style="height:500px"
@@ -79,7 +79,7 @@
 </template>
 <script>
 import { useStore } from 'vuex'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { findBanner } from '@/api/home'
 import { findTopCategory } from '@/api/category'
 import { ref, computed, watch } from 'vue'
@@ -98,6 +98,7 @@ export default {
     //
     const store = useStore()
     const route = useRoute()
+    const router = useRouter()
     // 1. 全部分类(一定知道我要做成什么样的 数据结构是什么)
     // 2. 各自的子分类
     // 3. 标题的表述
@@ -118,6 +119,8 @@ export default {
         console.log('要测试的数据', result)
       })
     }
+    console.log('我是route', route)
+    console.log('我是router', router)
     watch(() => route.params.id, (newVal) => {
       if (newVal && (`/category/${newVal}` === route.path)) {
         newVal && getList(route.params.id)
