@@ -4,6 +4,7 @@ import Layout from '@/views/Layout.vue'
 // 一级分类和二级分类的页面
 import TopCategory from '@/views/category/index.vue'
 import SubCategory from '@/views/category/sub.vue'
+import Goods from '@/views/goods/index.vue'
 
 const routes = [
   {
@@ -23,6 +24,10 @@ const routes = [
       {
         path: '/category/sub/:id',
         component: SubCategory
+      },
+      {
+        path: '/product/:id',
+        component: Goods
       }
     ]
   }
