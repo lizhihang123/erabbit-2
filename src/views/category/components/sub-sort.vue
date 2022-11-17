@@ -50,7 +50,7 @@
 import { reactive } from 'vue'
 export default {
   name: 'SubSort',
-  setup () {
+  setup (props, { emit }) {
     // 1. 根据后台需要的数据 定义数据对象
     const sortParams = reactive({
       inventory: false, // 库存
@@ -79,6 +79,8 @@ export default {
         // 点击其它的时候，价格的上下箭头不需要显示
         sortParams.sortMethod = null
       }
+      // 改变排序的结果
+      emit('sort-change', sortParams)
     }
     return {
       sortParams,

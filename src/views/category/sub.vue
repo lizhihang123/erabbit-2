@@ -3,15 +3,18 @@
     <!-- 面包屑 -->
     <SubBread :SubCategory="SubCategory"></SubBread>
     <!-- 筛选区 -->
-    <SubFilter></SubFilter>
+    <SubFilter @sort-filter="changeFilter"></SubFilter>
     <!-- 结果区域 -->
     <div class="goods-list">
       <!-- 排序 -->
-      <SubSort></SubSort>
+      <SubSort @sort-change="changeSort"></SubSort>
       <!-- 列表 -->
       <ul>
         <li
-          v-for="good in goodList"
+          v-for="
+        good
+        in
+        goodList"
           :key="good.id"
         >
           <GoodsItem :good="good" />
@@ -72,8 +75,8 @@ export default {
       pageSize: 10
     }
     // 获取数据函数
-    // 1. loading值改为false
-    // 2. 修改reqParams.categoryId
+    // 1. loading值 改为false
+    // 2. 修改 reqParams.categoryId
     // 3. 发请求 分为有数据和没有数据两种情况 根据result.items.length来判断
     const getData = () => {
       // 开始加载
@@ -109,12 +112,30 @@ export default {
         finished.value = false
       }
     })
+
+    // 修改排序
+    const changeSort = (params) => {
+      reqParams = { ...reqParams, ...params }
+      goodList.value = []
+      // 重新获取页码
+      reqParams.page = 1
+      finished.value = false
+    }
+    // 修改筛选
+    const changeFilter = (params) => {
+      reqParams = { ...reqParams, ...params }
+      goodList.value = []
+      reqParams.page = 1
+      finished.value = false
+    }
     return {
       SubCategory,
       getData,
       goodList,
       loading,
-      finished
+      finished,
+      changeSort,
+      changeFilter
     }
   }
 }

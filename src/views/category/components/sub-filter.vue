@@ -13,7 +13,7 @@
           :key="brand.id"
           href="javascript:;"
           :class="{active: filterData.selectBrand === brand.id}"
-          @click="filterData.selectBrand = brand.id"
+          @click="changeBrand(brand.id)"
         >
           {{brand.name}}
         </a>
@@ -32,7 +32,7 @@
           :key="property.id"
           href="javascript:;"
           :class="{active: item.selectProp === property.id}"
-          @click="item.selectProp = property.id"
+          @click="changeSale(item, property.id)"
         >
           {{property.name}}
         </a>
@@ -88,7 +88,7 @@ import { watch, ref } from 'vue'
 import { useRoute } from 'vue-router'
 export default {
   name: 'SubFilter',
-  setup () {
+  setup (props, { emit }) {
     const route = useRoute()
     const filterData = ref([])
     const filterLoading = ref(false)
@@ -110,21 +110,58 @@ export default {
           result.selectBrand = null
           filterData.value = result
           filterLoading.value = false
+          console.log(filterData.value)
         })
       }
     }, {
       // 一进入页面就要调用接口
       immediate: true
     })
-
+    // 一个方法适用 品牌和sku属性的参数拼接
+    const getFilterParams = () => {
+      const filterParams = {}
+      const attrs = []
+      // 品牌的参数拼接 直接给到filterParams的属性
+      filterParams.selectBrand = filterData.value.selectBrand
+      // sku的属性拼接
+      filterData.value.saleProperties.forEach(item => {
+        // 找到点击的id的那一个property属性
+        const property = item.properties.find(property => property.id === item.selectProp)
+        // 如果有id就放到attrs数组里面去后续挂载到fiterParams对象上
+        if (property && property.id !== undefined) {
+          attrs.push({ groupName: item.name, propertyName: property.name })
+        }
+      })
+      if (attrs.length) {
+        filterParams.attrs = attrs
+      }
+      return filterParams
+    }
+    // 选中的是品牌
+    const changeBrand = (brandId) => {
+      // 如果点击的就是当前选中的，就不需要再次发送请求了
+      if (filterData.value.selectBrand === brandId) return
+      filterData.value.selectBrand = brandId
+      emit('sort-filter', getFilterParams())
+    }
+    // 选中的是参数sku
+    const changeSale = (item, propertyId) => {
+      // 如果点击的就是当前选中的，就不需要再次发送请求了
+      if (item.selectProp === propertyId) return
+      item.selectProp = propertyId
+      emit('sort-filter', getFilterParams())
+    }
     const changFn = (val) => {
       console.log(val)
     }
+
     return {
       filterData,
       filterLoading,
       isShow,
-      changFn
+      changFn,
+      changeBrand,
+      changeSale
     }
   }
 }
