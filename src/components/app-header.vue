@@ -34,7 +34,6 @@ export default {
     AppHeaderNav
   },
   setup () {
-    console.log('123')
   }
 }
 </script>

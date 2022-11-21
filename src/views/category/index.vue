@@ -78,7 +78,7 @@
 </template>
 <script>
 import { useStore } from 'vuex'
-import { useRoute, useRouter } from 'vue-router'
+import { useRoute } from 'vue-router'
 import { findBanner } from '@/api/home'
 import { findTopCategory } from '@/api/category'
 import { ref, computed, watch } from 'vue'
@@ -97,7 +97,6 @@ export default {
     //
     const store = useStore()
     const route = useRoute()
-    const router = useRouter()
     // 1. 全部分类(一定知道我要做成什么样的 数据结构是什么)
     // 2. 各自的子分类
     // 3. 标题的表述
@@ -115,11 +114,8 @@ export default {
     const getList = () => {
       findTopCategory(route.params.id).then(data => {
         result.value = data.result.children
-        console.log('要测试的数据', result)
       })
     }
-    console.log('我是route', route)
-    console.log('我是router', router)
     watch(() => route.params.id, (newVal) => {
       if (newVal && (`/category/${newVal}` === route.path)) {
         newVal && getList(route.params.id)
@@ -127,7 +123,6 @@ export default {
     }, {
       immediate: true
     })
-    console.log(topCategory)
     return { sliders, topCategory, result }
   }
 }

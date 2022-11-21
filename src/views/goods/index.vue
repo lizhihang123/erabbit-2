@@ -14,9 +14,15 @@
       <!-- 商品信息 -->
       <div class="goods-info">
         <div class="media">
+          <!-- 图片放大镜 -->
           <GoodsImage :images="goods.mainPictures"></GoodsImage>
+          <!-- 商品的销售属性 -->
+          <GoodsSale></GoodsSale>
         </div>
-        <div class="spec"></div>
+        <div class="spec">
+          <!-- 商品的名称 -->
+          <GoodName :goods="goods"></GoodName>
+        </div>
       </div>
       <!-- 商品推荐 -->
       <GoodsRelevant />
@@ -44,6 +50,8 @@
 // 组件
 import GoodsRelevant from './components/goods-relevant'
 import GoodsImage from './components/goods-image'
+import GoodsSale from './components/goods-sale'
+import GoodName from './components/goods-name'
 // api
 import { findGoods } from '@/api/goods.js'
 // Vue相关
@@ -51,10 +59,9 @@ import { nextTick, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 export default {
   name: 'XtxGoodsPage',
-  components: { GoodsRelevant, GoodsImage },
+  components: { GoodsRelevant, GoodsImage, GoodsSale, GoodName },
   setup () {
     const { goods } = useGoods()
-    console.log(goods)
     return {
       goods
     }
@@ -75,6 +82,7 @@ const useGoods = () => {
   }, {
     immediate: true
   })
+  console.log(goods)
   return {
     goods
   }
@@ -86,6 +94,7 @@ const useGoods = () => {
   min-height: 600px;
   background: #fff;
   display: flex;
+  text-align: left;
   .media {
     width: 580px;
     height: 600px;
